@@ -1,0 +1,20 @@
+{
+  "name": "koa-page-cache",
+  "version": "1.0.0",
+  "description": "KOA 页面缓存",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://172.16.58.95:5678/EMWebsiteFETeam/KoaPageCache.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.6.1",
+    "memory-cache": "^0.2.0"
+  }
+}

@@ -2,9 +2,28 @@
  * 生成key
  */
 
-const encryption = require('../encryption')
+//const encryption = require('../encryption')
+const hash = require('object-hash');
 
 module.exports = function(url, options){
-  //TODO: 处理options
-  return encryption.sha1(url)
+  let keyobj = {}
+
+  if(options.protocol)
+    keyobj.protocol = url.protocol
+
+  if(options.host)
+    keyobj.protocol = url.host
+
+  if(options.pathname)
+    keyobj.protocol = url.pathname
+
+  if(options.search){
+    let searchobj = {}
+    for(var pair of url.searchParams.entries()) {
+      searchobj[pair[0]] = pair[1]
+    }
+    keyobj.search = url.searchobj
+  }
+ 
+  return hash.sha1(keyobj)
 }

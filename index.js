@@ -129,7 +129,7 @@ class static_middleware{
 
     if(this.options.folder == ''){
       this.middleware = async (ctx, next)=>{
-        next()
+        await next()
       }
       return this
     }
@@ -141,7 +141,7 @@ class static_middleware{
           filepath = filepath.replace('/' + this.options.route, '')
         }
         else{
-          next()
+          await next()
           return
         }
       }
@@ -180,7 +180,7 @@ class static_middleware{
         let stat = await fs.stat(filepath)
 
         if(stat.isDirectory()){
-          next()
+          await next()
           return
         }
 
@@ -243,8 +243,8 @@ class static_middleware{
 
       }
       catch(error){
-        console.error(error)
-        next()
+        //console.error(error)
+        await next()
         return        
       }
 

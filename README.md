@@ -28,11 +28,11 @@ const Koa = require('koa');
 const pagecache = require('koa-page-cache')
 const app = new Koa();
 
-const mypagecache = pagecache.path_middleware({
+const mypagecache = new pagecache.path_middleware({
   cachetime: 60,
   etag: true
 })
-sdf
+
 app.use(mypagecache.middleware)
 
 app.use(function(ctx) {
@@ -51,7 +51,7 @@ const Router = require('koa-router');
 
 const app = new Koa();
 
-const mypagecache = pagecache.path_middleware({
+const mypagecache = new pagecache.path_middleware({
   cachetime: 60,
   etag: true
 })
@@ -120,14 +120,14 @@ const Koa = require('koa');
 const pagecache = require('koa-page-cache')
 const app = new Koa();
 
-const mypagecache = pagecache.static_middleware({
+const mypagecache = new pagecache.static_middleware({
   cachetime: 60,
   folder: './test/public/',
   maxage: 60,
   etag: true,
   less: true
 })
-sdf
+
 app.use(mypagecache.middleware)
 
 app.use(function(ctx) {

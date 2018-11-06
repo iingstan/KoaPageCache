@@ -175,7 +175,7 @@ class static_middleware{
       }
 
 
-      try{
+      if( await fs.exists(filepath)){
         
         let stat = await fs.stat(filepath)
 
@@ -242,12 +242,12 @@ class static_middleware{
         }
 
       }
-      catch(error){
-        //console.error(error)
+      else{
         await next()
-        return        
+        return         
       }
 
+       
     }
   }
 

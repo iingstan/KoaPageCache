@@ -110,7 +110,9 @@ urlkey:{
 * 设置etag或者max-age,使浏览器也缓存静态文件
 * 支持直接把less文件映射成编译后的css
 * 支持把静态文件缓存进内存
-* //TODO:gzip压缩和br压缩
+* TODO:gzip压缩和br压缩
+* TODO: base64小图片进css
+* TODO: 文件合并功能
 
 
 ## 使用方法

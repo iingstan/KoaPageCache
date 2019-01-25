@@ -56,8 +56,8 @@ class path_middleware {
         if(this.options.etag){
           ctx.set('Etag', cache_content.etag)
         }
+        ctx.set(cache_content.header)
         ctx.set('Last-Modified', cache_content.time)
-        ctx.set('Content-Type', cache_content.contenttype)
         ctx.body = cache_content.txt
       }
       else{
@@ -79,12 +79,15 @@ class path_middleware {
           memcache.put(key, {
             txt: ctx.body,
             time: now,
-            contenttype: ctx.response.header['content-type'],
+            header: ctx.response.header,
             etag: etagval
           }, this.options.cachetime * 1000)
 
           if(this.options.filecachefolder){ //filecache
-            filecache.put(key, ctx.body, this.options.filecachefolder)
+            filecache.put(key, {
+              body: ctx.body,
+              header: ctx.response.header
+            }, this.options.filecachefolder)
           }
         }
         catch(error){
@@ -92,7 +95,8 @@ class path_middleware {
           if(this.options.filecachefolder && this.options.planlocal){
             let filecachec = await filecache.get(key, this.options.filecachefolder)
 
-            ctx.body = filecachec
+            ctx.body = filecachec.body
+            ctx.set(filecachec.header)
 
             this.options.onPlanLocal(ctx, key)
           }
@@ -175,7 +179,7 @@ class static_middleware{
       }
 
 
-      if( await fs.exists(filepath)){
+      try{
         
         let stat = await fs.stat(filepath)
 
@@ -242,12 +246,12 @@ class static_middleware{
         }
 
       }
-      else{
+      catch(error){
+        //console.error(error)
         await next()
-        return         
+        return        
       }
 
-       
     }
   }
 

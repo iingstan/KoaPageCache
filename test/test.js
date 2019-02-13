@@ -9,7 +9,9 @@ const publiccache = new koapagecache.static_middleware({
   folder: './test/public/',
   maxage: 60,
   etag: true,
-  less: true
+  less: true,
+  gzip: true,
+  uglifyjs: true
 })
 
 app.use(publiccache.middleware)
@@ -33,7 +35,7 @@ app.use(mypagecache.middleware)
 
 
 app.use(function(ctx) {
-  console.info(111)
+  //console.info(111)
   // console.info(ctx.path)
   // if(ctx.path == '/cat.jpg'){
   //   ctx.set('Content-Type','image/jpeg')

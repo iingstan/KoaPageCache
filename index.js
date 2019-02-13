@@ -8,6 +8,7 @@ const fs = require('fs-extra')
 const path = require('path')
 const makeless = require('./modules/makeless')
 const { URL } = require('url')
+const compress = require('./modules/compress')
 
 
 class path_middleware {
@@ -91,7 +92,7 @@ class path_middleware {
           }
         }
         catch(error){
-          console.error(error);
+          //console.error(error);
           if(this.options.filecachefolder && this.options.planlocal){
             let filecachec = await filecache.get(key, this.options.filecachefolder)
 
@@ -127,7 +128,10 @@ class static_middleware{
       route: '',
       maxage: 0,
       etag: false,
-      less: false
+      less: false,
+      gzip: false,
+      brotli: false,
+      uglifyjs: false
     }
     this.options = Object.assign(default_options, options)
 
@@ -173,6 +177,11 @@ class static_middleware{
           //ctx.set('Last-Modified', cache_content.time)
           ctx.type = cache_content.type
           ctx.body = cache_content.content
+
+          if (this.options.gzip && ctx.acceptsEncodings('gzip', 'identity') === 'gzip') {
+            ctx.set('Content-Encoding', 'gzip')
+          }
+       
           return 
         } 
               
@@ -209,7 +218,7 @@ class static_middleware{
           
           if(this.options.etag){
             ctx.set('Etag', etagval)
-          }          
+          }
           ctx.type = 'text/css'
           ctx.body = css
         }
@@ -227,17 +236,18 @@ class static_middleware{
           }
 
           ctx.type = path.extname(filepath)
-          //console.info(222, key)
-          if(this.options.cachetime){
-            ctx.body = await fs.readFile(filepath)
-          }
-          else{
-            ctx.body = fs.createReadStream(filepath) 
-          }
+          ctx.body = await fs.readFile(filepath)
                    
         }
 
         if(this.options.cachetime){
+          if (this.options.uglifyjs && path.extname(filepath) == '.js') {
+            ctx.body = await compress.uglifyjs(ctx.body)
+          }
+          if (this.options.gzip && ctx.acceptsEncodings('gzip', 'identity') === 'gzip') {
+            ctx.body = await compress.gzip(ctx.body)
+            ctx.set('Content-Encoding', 'gzip')
+          }
           memcache.put(key, {
             content: ctx.body,
             type: ctx.type,

@@ -104,15 +104,18 @@ urlkey:{
 * 落地文件缓存没有过期时间，只会存储最后一次的内容，文件名不变
 
 
-# 静态文件缓存
+# 静态文件映射和缓存
 
-* 设置一个本地文件夹，映射成路径 //TODO:映射多个文件夹
+* 设置一个本地文件夹，里面的静态文件映射成url路径
 * 设置etag或者max-age,使浏览器也缓存静态文件
 * 支持直接把less文件映射成编译后的css
 * 支持把静态文件缓存进内存
-* TODO:gzip压缩和br压缩
+* 支持gzip压缩
+* TODO: 映射多个本地文件夹
+* TODO: br压缩 等到node v11之后再做，那时候可能原生支持brotli算法
 * TODO: base64小图片进css
 * TODO: 文件合并功能
+* TODO: 把静态文件缓存进内存(永久)
 
 
 ## 使用方法
@@ -127,7 +130,9 @@ const mypagecache = new pagecache.static_middleware({
   folder: './test/public/',
   maxage: 60,
   etag: true,
-  less: true
+  less: true,
+  gzip: true,
+  uglifyjs: true
 })
 
 app.use(mypagecache.middleware)
@@ -149,6 +154,9 @@ app.listen(3000);
 * folder 静态文件的文件夹，必填
 * less 把对应的less静态文件映射成编译后的css文件，默认false
 * route 静态文件path的路由，默认根文件夹
+* gzip 是否开启gzip压缩，默认false。注意开启压缩之后，cachetime设置不宜过短，不然服务器要频繁压缩静态文件。如果静态文件太多，也建议在nginx上面开启gzip压缩而不是node上
+* uglifyjs 是否开启js文件的uglifyjs压缩，默认false。uglifyjs压缩比较消耗性能，如果js文件过多，请不要开启。判断是不是js文件的方法是看后缀名是不是js，如果不是则不会启用此压缩
+<!-- * brotli 是否开启brotli压缩，默认false。注意开启压缩之后，cachetime设置不宜过短，不然服务器要频繁压缩静态文件。如果静态文件太多，也建议在nginx上面开启brotli压缩而不是node上。如果同时开启了gzip压缩，并且浏览器支持brotli压缩，则brotli压缩优先 -->
 
 
 ## 实例属性

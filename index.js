@@ -72,6 +72,9 @@ class path_middleware {
           }
 
           if (this.options.etag){
+            if(typeof ctx.body == 'object'){
+              ctx.body = JSON.stringify(ctx.body)
+            }
             etagval = etag((ctx.body))
             ctx.set('Etag', etagval)
           }

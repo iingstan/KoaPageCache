@@ -18,16 +18,23 @@ app.use(publiccache.middleware)
 
 //url缓存
 const mypagecache = new koapagecache.path_middleware({
-  cachetime: 60,
-  //maxage: 60,
+  // cachetime: 60,
+  // maxage: 60,
+  // etag: true,
+  // planlocal: true,
+  // filecachefolder: './cache/',
+  // onPlanLocal: function(ctx, key){
+  //   console.info('error')
+  //   console.info(ctx.href)
+  //   console.info(key)
+  // }
+
+  cachetime: 20,
   etag: true,
-  planlocal: true,
+  maxage: 20,
   filecachefolder: './cache/',
-  onPlanLocal: function(ctx, key){
-    console.info('error')
-    console.info(ctx.href)
-    console.info(key)
-  }
+  planlocal: true
+
 })
 
 app.use(mypagecache.middleware)
@@ -48,9 +55,33 @@ app.use(function(ctx) {
   // }  
   if(ctx.path == '/'){
     ctx.set('Content-Type','text/html; charset=utf-8')
-    ctx.body = '<link href="./main.less" rel="stylesheet"><a href="/">Hello World</a> <img style="vertical-align: middle" src="./cat.jpg"> ' + mypagecache.getKey(ctx.href) + '<div>sdf</div>'//mypagecache.getKey(ctx.href)
+    ctx.body = `<link href="./main.less" rel="stylesheet"><a href="/">Hello World</a> <img style="vertical-align: middle" src="./cat.jpg">${mypagecache.getKey(ctx.href)}<div>sdf</div><script src="./jquery.min.js"></script><script>
+    
+    $.ajax({
+  url: '/apia',
+  type: 'GET',
+  dataType: 'json',
+  data: {
+    
+  }
+})
+.done(function(json) {   
+  console.info(json)
+})
+.fail(function(error) {
+  
+})
+    
+    </script>`
+//mypagecache.getKey(ctx.href)
     return
   }
+
+  if(ctx.path == '/apia'){
+    ctx.set('Content-Type','application/json; charset=utf-8')
+    ctx.body = {aa:"bb"}
+    return
+  }  
 
   ctx.status = 404
 

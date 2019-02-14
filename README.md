@@ -116,6 +116,7 @@ urlkey:{
 * TODO: base64小图片进css
 * TODO: 文件合并功能
 * TODO: 把静态文件缓存进内存(永久)
+* TODO: CSS压缩
 
 
 ## 使用方法

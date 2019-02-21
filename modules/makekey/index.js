@@ -12,17 +12,17 @@ module.exports = function(url, options){
     keyobj.protocol = url.protocol
 
   if(options.host)
-    keyobj.protocol = url.host
+    keyobj.host = url.host
 
   if(options.pathname)
-    keyobj.protocol = url.pathname
+    keyobj.pathname = url.pathname
 
   if(options.search){
     let searchobj = {}
     for(var pair of url.searchParams.entries()) {
       searchobj[pair[0]] = pair[1]
     }
-    keyobj.search = url.searchobj
+    keyobj.search = searchobj
   }
  
   return hash.sha1(keyobj)

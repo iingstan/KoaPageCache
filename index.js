@@ -75,7 +75,12 @@ class path_middleware {
             if(typeof ctx.body == 'object'){
               ctx.body = JSON.stringify(ctx.body)
             }
-            etagval = etag((ctx.body))
+            if (ctx.body) {
+              etagval = etag((ctx.body))
+            }
+            else{
+              etagval = Math.floor(Math.random()*1000000000+1).toString()
+            }
             ctx.set('Etag', etagval)
           }
           ctx.set('Last-Modified', now)

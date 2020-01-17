@@ -1,6 +1,6 @@
 {
   "name": "koa-page-cache",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "KOA 页面缓存",
   "main": "index.js",
   "scripts": {

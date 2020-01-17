@@ -10,6 +10,10 @@ const makeless = require('./modules/makeless')
 const { URL } = require('url')
 const compress = require('./modules/compress')
 
+/**
+ * 验证是否有向上的路径
+ */
+var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/
 
 class path_middleware {
   constructor(options){
@@ -100,6 +104,7 @@ class path_middleware {
           }
         }
         catch(error){
+          //TODO: recode error
           //console.error(error);
           if(this.options.filecachefolder && this.options.planlocal){
             let filecachec = await filecache.get(key, this.options.filecachefolder)
@@ -152,6 +157,12 @@ class static_middleware{
 
     this.middleware = async (ctx, next)=>{
       let filepath = ctx.request.path
+
+      if (UP_PATH_REGEXP.test(filepath)) {
+        await next()
+        return
+      }
+
       if(this.options.route){
         if(ctx.request.path.indexOf('/' + this.options.route + '/') == 0){
           filepath = filepath.replace('/' + this.options.route, '')
